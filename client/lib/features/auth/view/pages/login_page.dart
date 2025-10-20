@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 import '../widgets/auth_gadient_button.dart';
 import '../widgets/custom_field.dart';
 
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  final TextEditingController nameController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -20,7 +19,6 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void dispose() {
-    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -39,27 +37,25 @@ class _SignupPageState extends State<SignupPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                      'Sign Up.',
+                      'Sign In.',
                       style: TextStyle(
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
                       )
                       ),
-               const SizedBox(height: 15,),       
-               CustomField( hintText: 'Name',controller: nameController,),
-               const SizedBox(height: 15,), 
+               const SizedBox(height: 15,),        
                CustomField(hintText: 'Email',controller: emailController,),
                const SizedBox(height: 15,),
                CustomField(hintText: 'Password',controller: passwordController,isObscureText: true,),
                const SizedBox(height: 20,),
-               AuthGadientButton(buttonText: 'Sign up', onTap: () {},),
+               AuthGadientButton(buttonText: 'Sign in', onTap: () {},),
                const SizedBox(height: 20,),
                RichText(text: TextSpan(
-                text: 'Already have an account? ',
+                text: "Don't have an account? ",
                 style: Theme.of(context).textTheme.titleMedium,
                 children: const [
                   TextSpan(
-                    text: 'Sign in',
+                    text: 'Sign up',
                     style: TextStyle(
                       color: Pallete.gradient2,
                       fontWeight: FontWeight.bold,
