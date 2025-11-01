@@ -1,5 +1,7 @@
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'signup_page.dart'; // لو في نفس المجلد
 
 import '../widgets/auth_gadient_button.dart';
 import '../widgets/custom_field.dart';
@@ -48,9 +50,15 @@ class _LoginPageState extends State<LoginPage> {
                const SizedBox(height: 15,),
                CustomField(hintText: 'Password',controller: passwordController,isObscureText: true,),
                const SizedBox(height: 20,),
-               AuthGadientButton(buttonText: 'Sign in', onTap: () {},),
+                AuthGadientButton(buttonText: 'Sign in', onTap: () async {
+                  await  AuthRemoteRepository().login(email:emailController.text,password:passwordController.text,);},),
                const SizedBox(height: 20,),
-               RichText(text: TextSpan(
+                 GestureDetector(
+                   onTap: (){
+                     Navigator.push(context,MaterialPageRoute(builder:(context)=> SignupPage(),), );
+
+                   },
+                 child:RichText(text: TextSpan(
                 text: "Don't have an account? ",
                 style: Theme.of(context).textTheme.titleMedium,
                 children: const [
@@ -60,9 +68,10 @@ class _LoginPageState extends State<LoginPage> {
                       color: Pallete.gradient2,
                       fontWeight: FontWeight.bold,
                     ),
+
                   ),
                 ],
-               ),)
+               ),),)
             ],
             
           ),
