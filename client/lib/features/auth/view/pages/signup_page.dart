@@ -1,24 +1,26 @@
 import 'package:client/core/theme/app_pallete.dart';
+import 'package:client/core/utils.dart';
+import 'package:client/core/widgets/loader.dart';
+import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:client/features/auth/repositories/auth_remote_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'login_page.dart'; // لو في نفس المجلد
-
 import '../widgets/auth_gadient_button.dart';
 import '../widgets/custom_field.dart';
 
-class SignupPage extends StatefulWidget {
+
+class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  ConsumerState<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends ConsumerState<SignupPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
 
   @override
   void dispose() {
@@ -31,9 +33,37 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading=ref
+    .watch(authViewModelProvider.select((val) =>val?.isLoading==true));
+
+    ref.listen(
+      authViewModelProvider,
+      (_, next) {
+        next?.when(
+          data: (data) {
+            showSnackBar(
+              context,
+               'Account created successfully! Please login.',
+               );
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+            ),
+            );
+          }, 
+          error: (error, st) {
+            showSnackBar(context, error.toString());
+
+              }, 
+          loading: () {},
+          );
+    },
+    );
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
+      body: isLoading ? const Loader()
+      : Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
           key:formKey,
@@ -55,12 +85,20 @@ class _SignupPageState extends State<SignupPage> {
                CustomField(hintText: 'Password',controller: passwordController,isObscureText: true,),
                const SizedBox(height: 20,),
                AuthGadientButton(buttonText: 'Sign up', onTap: () async{
-                final res=  await AuthRemoteRepository().signup(name:nameController.text ,email:emailController.text,password:passwordController.text,);
-                print(res);
-               },),
-               const SizedBox(height: 20,),
-          GestureDetector(
-            onTap: (){
+                if(formKey.currentState!.validate()){
+                  await ref.read(authViewModelProvider.notifier).signUpUser(
+                    name: nameController.text,
+                    email: emailController.text,
+                    password: passwordController.text
+                      );
+                } else {
+                  showSnackBar(context, 'Missing fields!');
+                }
+               },
+              ),
+              const SizedBox(height: 20,),
+              GestureDetector(
+                onTap: (){
               Navigator.push(context,MaterialPageRoute(builder:(context)=> LoginPage(),), );
 
             },
