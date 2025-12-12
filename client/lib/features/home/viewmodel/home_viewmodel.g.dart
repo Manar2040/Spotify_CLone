@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'current_user_notifier.dart';
+part of 'home_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,53 +9,52 @@ part of 'current_user_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(CurrentUserNotifier)
-const currentUserProvider = CurrentUserNotifierProvider._();
+@ProviderFor(HomeViewModel)
+const homeViewModelProvider = HomeViewModelProvider._();
 
-final class CurrentUserNotifierProvider
-    extends $NotifierProvider<CurrentUserNotifier, UserModel?> {
-  const CurrentUserNotifierProvider._()
+final class HomeViewModelProvider
+    extends $NotifierProvider<HomeViewModel, AsyncValue<dynamic>?> {
+  const HomeViewModelProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'currentUserProvider',
+        name: r'homeViewModelProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$currentUserNotifierHash();
+  String debugGetCreateSourceHash() => _$homeViewModelHash();
 
   @$internal
   @override
-  CurrentUserNotifier create() => CurrentUserNotifier();
+  HomeViewModel create() => HomeViewModel();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserModel? value) {
+  Override overrideWithValue(AsyncValue<dynamic>? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UserModel?>(value),
+      providerOverride: $SyncValueProvider<AsyncValue<dynamic>?>(value),
     );
   }
 }
 
-String _$currentUserNotifierHash() =>
-    r'20f8611b9437db349cdf10372446e0fc486429e5';
+String _$homeViewModelHash() => r'242a1af80c396d0bb3d94d18c53379656b7bc967';
 
-abstract class _$CurrentUserNotifier extends $Notifier<UserModel?> {
-  UserModel? build();
+abstract class _$HomeViewModel extends $Notifier<AsyncValue<dynamic>?> {
+  AsyncValue<dynamic>? build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<UserModel?, UserModel?>;
+    final ref = this.ref as $Ref<AsyncValue<dynamic>?, AsyncValue<dynamic>?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<UserModel?, UserModel?>,
-              UserModel?,
+              AnyNotifier<AsyncValue<dynamic>?, AsyncValue<dynamic>?>,
+              AsyncValue<dynamic>?,
               Object?,
               Object?
             >;

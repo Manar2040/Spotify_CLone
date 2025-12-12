@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_user_notifier.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class CurrentUserNotifier extends _$CurrentUserNotifier {
   @override
   UserModel? build() {
