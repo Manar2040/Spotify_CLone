@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'current_user_notifier.dart';
+part of 'current_song_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,53 +9,53 @@ part of 'current_user_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(CurrentUserNotifier)
-const currentUserProvider = CurrentUserNotifierProvider._();
+@ProviderFor(CurrentSongNotifier)
+const currentSongProvider = CurrentSongNotifierProvider._();
 
-final class CurrentUserNotifierProvider
-    extends $NotifierProvider<CurrentUserNotifier, UserModel?> {
-  const CurrentUserNotifierProvider._()
+final class CurrentSongNotifierProvider
+    extends $NotifierProvider<CurrentSongNotifier, SongModel?> {
+  const CurrentSongNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'currentUserProvider',
+        name: r'currentSongProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$currentUserNotifierHash();
+  String debugGetCreateSourceHash() => _$currentSongNotifierHash();
 
   @$internal
   @override
-  CurrentUserNotifier create() => CurrentUserNotifier();
+  CurrentSongNotifier create() => CurrentSongNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserModel? value) {
+  Override overrideWithValue(SongModel? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UserModel?>(value),
+      providerOverride: $SyncValueProvider<SongModel?>(value),
     );
   }
 }
 
-String _$currentUserNotifierHash() =>
-    r'20f8611b9437db349cdf10372446e0fc486429e5';
+String _$currentSongNotifierHash() =>
+    r'499aed71e6414250f6d5515c9896bb28caa6681f';
 
-abstract class _$CurrentUserNotifier extends $Notifier<UserModel?> {
-  UserModel? build();
+abstract class _$CurrentSongNotifier extends $Notifier<SongModel?> {
+  SongModel? build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<UserModel?, UserModel?>;
+    final ref = this.ref as $Ref<SongModel?, SongModel?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<UserModel?, UserModel?>,
-              UserModel?,
+              AnyNotifier<SongModel?, SongModel?>,
+              SongModel?,
               Object?,
               Object?
             >;
