@@ -46,6 +46,7 @@ dependencies:
   
   flex_color_picker: 3.7.1
   file_picker: ^10.3.7
+  just_audio: ^0.10.5
 
 
 dev_dependencies:
