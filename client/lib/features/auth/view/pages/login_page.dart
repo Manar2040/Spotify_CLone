@@ -4,12 +4,12 @@ import 'package:client/core/widgets/custom_field.dart';
 import 'package:client/core/widgets/loader.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:client/features/home/view/pages/home_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'signup_page.dart'; // لو في نفس المجلد
 
 import '../widgets/auth_gadient_button.dart';
-
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -28,7 +28,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-   
   }
 
   @override
@@ -40,14 +39,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.listen(authViewModelProvider, (_, next) {
       next?.when(
         data: (data) {
-          
-           Navigator.pushAndRemoveUntil(
-             context,
-             MaterialPageRoute(
-               builder: (context) => const HomePage(),
-           ),
-           (_)=>false,
-           );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+            (_) => false,
+          );
         },
         error: (error, st) {
           showSnackBar(context, error.toString());
@@ -89,18 +85,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       AuthGadientButton(
                         buttonText: 'Sign in',
                         onTap: () async {
-                          
-                              if (formKey.currentState!.validate()) {
-                               await  ref.read(authViewModelProvider.notifier)
-                              .loginUser(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
-                              }
-                              else {
-                                showSnackBar(context, 'Please fill all fields');
-                              }
-                              
+                          if (formKey.currentState!.validate()) {
+                            await ref
+                                .read(authViewModelProvider.notifier)
+                                .loginUser(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                );
+                          } else {
+                            showSnackBar(context, 'Please fill all fields');
+                          }
                         },
                       ),
                       const SizedBox(height: 20),
