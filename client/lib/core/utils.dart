@@ -8,7 +8,7 @@ String rgbToHex(Color color) {
 }
 
 Color hexToColor(String hex) {
-  return Color(int.parse(hex, radix: 16) + 0xFF000000);
+  return Color(int.parse(hex.replaceAll('#', ''), radix: 16) + 0xFF000000);
 }
 
 void showSnackBar(BuildContext context, String content) {

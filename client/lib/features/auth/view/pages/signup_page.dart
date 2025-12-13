@@ -4,6 +4,7 @@ import 'package:client/core/widgets/loader.dart';
 import 'package:client/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'login_page.dart'; // لو في نفس المجلد
 import '../widgets/auth_gadient_button.dart';
 import 'package:client/core/widgets/custom_field.dart';
@@ -27,7 +28,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-    
   }
 
   @override
