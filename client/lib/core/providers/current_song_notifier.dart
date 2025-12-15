@@ -1,60 +1,64 @@
 import 'package:client/features/home/models/song_model.dart';
+import 'package:client/features/home/repositories/home_local_repository.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:just_audio/just_audio.dart';
 part 'current_song_notifier.g.dart';
 
 @riverpod
 class CurrentSongNotifier extends _$CurrentSongNotifier {
+  late HomeLocalRepository _homeLocalRepository;
   AudioPlayer? audioPlayer;
   bool isPlaying = false;
-  List<SongModel> _songs = [];
+  List<SongModel> _queue = [];
   int _currentIndex = 0;
 
   @override
   SongModel? build() {
+    _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
     return null;
   }
 
   void updateSong(SongModel song) async {
-    // For backward compatibility or if just playing one song
-    selectSong(0, [song]);
+    await _playSong(song);
   }
 
   void selectSong(int index, List<SongModel> songs) async {
-    _songs = songs;
     _currentIndex = index;
-    final song = _songs[_currentIndex];
+    _queue = songs;
+    await _playSong(songs[index]);
+  }
 
-    state = song; // Optimistic update
-    await audioPlayer?.stop();
-    audioPlayer = AudioPlayer(); // Create new instance or reset?
-    // Creating new instance every time implies disposing old one?
-    // Ideally reuse, but existing code created new. I'll stick to creating new for safety unless performance issue.
-    // Actually, creating new AudioPlayer every time is resource heavy.
-    // But existing code did `audioPlayer = AudioPlayer()`. I'll follow that pattern for now to minimize bugs,
-    // but dispose previous if it exists.
-    // audioPlayer?.dispose(); // If I made it nullable and create new.
+  Future<void> _playSong(SongModel song) async {
+    if (audioPlayer == null) {
+      audioPlayer = AudioPlayer();
+      audioPlayer!.playerStateStream.listen((playerState) {
+        if (playerState.processingState == ProcessingState.completed) {
+          seekNext();
+        }
+      });
+    }
 
-    // Actually, `audioPlayer` field was nullable.
-    // Let's rely on just_audio.
+    if (isPlaying) {
+      await audioPlayer!.stop();
+    }
 
-    final audioSource = AudioSource.uri(Uri.parse(song.song_url));
+    final audioSource = AudioSource.uri(
+      Uri.parse(song.song_url),
+      tag: MediaItem(
+        id: song.id,
+        title: song.song_name,
+        artist: song.artist,
+        artUri: Uri.parse(song.thumbnail_url),
+      ),
+    );
     await audioPlayer!.setAudioSource(audioSource);
 
-    audioPlayer!.playerStateStream.listen((state) {
-      if (state.processingState == ProcessingState.completed) {
-        audioPlayer!.seek(Duration.zero);
-        audioPlayer!.pause();
-        isPlaying = false;
-        this.state = this.state?.copyWith(hex_code: this.state?.hex_code);
+    _homeLocalRepository.uploadLocalSong(song);
 
-        // Auto play next? User didn't ask explicitly but "Next/Previous buttons".
-        // Usually, yes. But let's stick to asked features.
-      }
-    });
     audioPlayer!.play();
     isPlaying = true;
-    this.state = this.state?.copyWith(hex_code: this.state?.hex_code);
+    state = song;
   }
 
   void playPause() {
@@ -67,26 +71,42 @@ class CurrentSongNotifier extends _$CurrentSongNotifier {
     state = state?.copyWith(hex_code: state?.hex_code);
   }
 
-  void seekNext() {
-    if (_currentIndex < _songs.length - 1) {
-      selectSong(_currentIndex + 1, _songs);
-    }
-  }
-
-  void seekPrevious() {
-    if (_currentIndex > 0) {
-      selectSong(_currentIndex - 1, _songs);
-    } else {
-      // If at start, maybe restart song?
-      audioPlayer?.seek(Duration.zero);
-    }
-  }
-
   void seek(double val) {
-    audioPlayer!.seek(
-      Duration(
-        milliseconds: (val * audioPlayer!.duration!.inMilliseconds).toInt(),
-      ),
-    );
+    if (audioPlayer != null && audioPlayer!.duration != null) {
+      audioPlayer!.seek(
+        Duration(
+          milliseconds: (val * audioPlayer!.duration!.inMilliseconds).toInt(),
+        ),
+      );
+    }
+  }
+
+  void seekNext() async {
+    if (_currentIndex < _queue.length - 1) {
+      _currentIndex++;
+      await _playSong(_queue[_currentIndex]);
+    } else {
+      // Loop back to start or stop? Let's stop for now or just replay last.
+      // For a proper playlist feel, typically you might stop or loop.
+      // Let's loop to start if it's the last song.
+      _currentIndex = 0;
+      await _playSong(_queue[_currentIndex]);
+    }
+  }
+
+  void seekPrevious() async {
+    if (audioPlayer != null && audioPlayer!.position.inSeconds > 2) {
+      audioPlayer!.seek(Duration.zero);
+      return;
+    }
+
+    if (_currentIndex > 0) {
+      _currentIndex--;
+      await _playSong(_queue[_currentIndex]);
+    } else {
+      // Go to last song if at beginning?
+      _currentIndex = _queue.length - 1;
+      await _playSong(_queue[_currentIndex]);
+    }
   }
 }

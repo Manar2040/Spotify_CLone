@@ -6,59 +6,21 @@ part of 'auth_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, type=warning
+String _$authViewModelHash() => r'a6e94d85e700e105c6ace49329ed04da3223b597';
 
+/// See also [AuthViewModel].
 @ProviderFor(AuthViewModel)
-const authViewModelProvider = AuthViewModelProvider._();
+final authViewModelProvider =
+    AutoDisposeNotifierProvider<AuthViewModel, AsyncValue<UserModel>?>.internal(
+  AuthViewModel.new,
+  name: r'authViewModelProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authViewModelHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
 
-final class AuthViewModelProvider
-    extends $NotifierProvider<AuthViewModel, AsyncValue<UserModel>?> {
-  const AuthViewModelProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'authViewModelProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$authViewModelHash();
-
-  @$internal
-  @override
-  AuthViewModel create() => AuthViewModel();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<UserModel>? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AsyncValue<UserModel>?>(value),
-    );
-  }
-}
-
-String _$authViewModelHash() => r'80399ff7386b25c0e1875a7ba7404f6e8c966fdb';
-
-abstract class _$AuthViewModel extends $Notifier<AsyncValue<UserModel>?> {
-  AsyncValue<UserModel>? build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<UserModel>?, AsyncValue<UserModel>?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<UserModel>?, AsyncValue<UserModel>?>,
-              AsyncValue<UserModel>?,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
+typedef _$AuthViewModel = AutoDisposeNotifier<AsyncValue<UserModel>?>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

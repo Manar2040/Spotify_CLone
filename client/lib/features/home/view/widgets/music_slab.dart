@@ -1,7 +1,9 @@
 import 'package:client/core/providers/current_song_notifier.dart';
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/utils.dart';
 import 'package:client/features/home/view/widgets/music_player.dart';
+import 'package:client/features/home/viewmodel/home_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,8 +13,10 @@ class MusicSlab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSong = ref.watch(currentSongProvider);
-    final songNotifier = ref.read(currentSongProvider.notifier);
+    final currentSong = ref.watch(currentSongNotifierProvider);
+    final songNotifier = ref.read(currentSongNotifierProvider.notifier);
+    final userFavorites = ref
+        .watch(currentUserNotifierProvider.select((data) => data!.favorites));
 
     if (currentSong == null) {
       return const SizedBox();
@@ -25,20 +29,21 @@ class MusicSlab extends ConsumerWidget {
             pageBuilder: (context, animation, secondaryAnimation) {
               return const MusicPlayer();
             },
-            transitionsBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-              child,
-            ) {
-              final tween = Tween(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).chain(CurveTween(curve: Curves.easeIn));
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              final tween =
+                  Tween(begin: const Offset(0, 1), end: Offset.zero).chain(
+                CurveTween(
+                  curve: Curves.easeIn,
+                ),
+              );
 
               final offsetAnimation = animation.drive(tween);
 
-              return SlideTransition(position: offsetAnimation, child: child);
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
             },
           ),
         );
@@ -65,7 +70,9 @@ class MusicSlab extends ConsumerWidget {
                         width: 48,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage(currentSong.thumbnail_url),
+                            image: NetworkImage(
+                              currentSong.thumbnail_url,
+                            ),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(4),
@@ -93,65 +100,69 @@ class MusicSlab extends ConsumerWidget {
                           ),
                         ),
                       ],
-                    ),
+                    )
                   ],
                 ),
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        CupertinoIcons.heart,
+                      onPressed: () async {
+                        await ref.read(homeViewModelProvider.notifier).favSong(
+                              songId: currentSong.id,
+                            );
+                      },
+                      icon: Icon(
+                        userFavorites
+                                .where((fav) => fav.song_id == currentSong.id)
+                                .toList()
+                                .isNotEmpty
+                            ? CupertinoIcons.heart_fill
+                            : CupertinoIcons.heart,
                         color: Pallete.whiteColor,
                       ),
                     ),
                     IconButton(
                       onPressed: songNotifier.playPause,
-                      icon: StreamBuilder<bool>(
-                        stream: songNotifier.audioPlayer?.playingStream,
-                        builder: (context, snapshot) {
-                          final isPlaying = snapshot.data ?? false;
-                          return Icon(
-                            isPlaying
-                                ? CupertinoIcons.pause_fill
-                                : CupertinoIcons.play_fill,
-                            color: Pallete.whiteColor,
-                          );
-                        },
+                      icon: Icon(
+                        songNotifier.isPlaying
+                            ? CupertinoIcons.pause_fill
+                            : CupertinoIcons.play_fill,
+                        color: Pallete.whiteColor,
                       ),
                     ),
                   ],
-                ),
+                )
               ],
             ),
           ),
           StreamBuilder(
-            stream: songNotifier.audioPlayer?.positionStream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox();
-              }
-              final position = snapshot.data;
-              final duration = songNotifier.audioPlayer!.duration;
-              double sliderValue = 0.0;
-              if (position != null && duration != null) {
-                sliderValue = position.inMilliseconds / duration.inMilliseconds;
-              }
+              stream: songNotifier.audioPlayer?.positionStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox();
+                }
+                final position = snapshot.data;
+                final duration = songNotifier.audioPlayer!.duration;
+                double sliderValue = 0.0;
+                if (position != null && duration != null) {
+                  sliderValue =
+                      position.inMilliseconds / duration.inMilliseconds;
+                }
 
-              return Positioned(
-                bottom: 0,
-                left: 8,
-                child: Container(
-                  height: 2,
-                  width: sliderValue * (MediaQuery.of(context).size.width - 32),
-                  decoration: BoxDecoration(
-                    color: Pallete.whiteColor,
-                    borderRadius: BorderRadius.circular(7),
+                return Positioned(
+                  bottom: 0,
+                  left: 8,
+                  child: Container(
+                    height: 2,
+                    width:
+                        sliderValue * (MediaQuery.of(context).size.width - 32),
+                    decoration: BoxDecoration(
+                      color: Pallete.whiteColor,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              }),
           Positioned(
             bottom: 0,
             left: 8,

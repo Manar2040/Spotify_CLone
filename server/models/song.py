@@ -1,6 +1,7 @@
 from sqlalchemy import TEXT, VARCHAR, Column
 from server.models.base import Base
 
+
 class Song(Base):
     __tablename__ = 'songs'
 
