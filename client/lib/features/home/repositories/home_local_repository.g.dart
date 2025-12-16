@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_remote_repository.dart';
+part of 'home_local_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authRemoteRepositoryHash() =>
-    r'458f7d3fd189eb7b9a4d1b4e314ff06b468cce33';
+String _$homeLocalRepositoryHash() =>
+    r'30806b3c6a6c707b0b46e1f3406f89fd82b550dc';
 
-/// See also [authRemoteRepository].
-@ProviderFor(authRemoteRepository)
-final authRemoteRepositoryProvider =
-    AutoDisposeProvider<AuthRemoteRepository>.internal(
-  authRemoteRepository,
-  name: r'authRemoteRepositoryProvider',
+/// See also [homeLocalRepository].
+@ProviderFor(homeLocalRepository)
+final homeLocalRepositoryProvider =
+    AutoDisposeProvider<HomeLocalRepository>.internal(
+  homeLocalRepository,
+  name: r'homeLocalRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authRemoteRepositoryHash,
+      : _$homeLocalRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AuthRemoteRepositoryRef = AutoDisposeProviderRef<AuthRemoteRepository>;
+typedef HomeLocalRepositoryRef = AutoDisposeProviderRef<HomeLocalRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

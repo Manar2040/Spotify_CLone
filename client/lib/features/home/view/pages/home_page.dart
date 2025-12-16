@@ -39,20 +39,18 @@ class _HomePageState extends ConsumerState<HomePage> {
               selectedIndex == 0
                   ? 'assets/images/home_filled.png'
                   : 'assets/images/home_unfilled.png',
-              color:
-                  selectedIndex == 0
-                      ? Pallete.whiteColor
-                      : Pallete.inactiveBottomBarItemColor,
+              color: selectedIndex == 0
+                  ? Pallete.whiteColor
+                  : Pallete.inactiveBottomBarItemColor,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
               'assets/images/library.png',
-              color:
-                  selectedIndex == 1
-                      ? Pallete.whiteColor
-                      : Pallete.inactiveBottomBarItemColor,
+              color: selectedIndex == 1
+                  ? Pallete.whiteColor
+                  : Pallete.inactiveBottomBarItemColor,
             ),
             label: 'Library',
           ),

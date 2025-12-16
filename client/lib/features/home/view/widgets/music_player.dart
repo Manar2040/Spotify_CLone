@@ -1,6 +1,8 @@
 import 'package:client/core/providers/current_song_notifier.dart';
+import 'package:client/core/providers/current_user_notifier.dart';
 import 'package:client/core/theme/app_pallete.dart';
 import 'package:client/core/utils.dart';
+import 'package:client/features/home/viewmodel/home_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +12,10 @@ class MusicPlayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSong = ref.watch(currentSongProvider);
-    final songNotifier = ref.read(currentSongProvider.notifier);
+    final currentSong = ref.watch(currentSongNotifierProvider);
+    final songNotifier = ref.read(currentSongNotifierProvider.notifier);
+    final userFavorites = ref
+        .watch(currentUserNotifierProvider.select((data) => data!.favorites));
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -94,16 +98,25 @@ class MusicPlayer extends ConsumerWidget {
                       ),
                       const Expanded(child: SizedBox()),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          CupertinoIcons.heart,
+                        onPressed: () async {
+                          await ref
+                              .read(homeViewModelProvider.notifier)
+                              .favSong(
+                                songId: currentSong.id,
+                              );
+                        },
+                        icon: Icon(
+                          userFavorites
+                                  .any((fav) => fav.song_id == currentSong.id)
+                              ? CupertinoIcons.heart_fill
+                              : CupertinoIcons.heart,
                           color: Pallete.whiteColor,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 15),
-                  StreamBuilder(
+                  StreamBuilder<Duration>(
                     stream: songNotifier.audioPlayer!.positionStream,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -122,8 +135,8 @@ class MusicPlayer extends ConsumerWidget {
                           SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               activeTrackColor: Pallete.whiteColor,
-                              inactiveTrackColor: Pallete.whiteColor
-                                  .withOpacity(0.117),
+                              inactiveTrackColor:
+                                  Pallete.whiteColor.withOpacity(0.117),
                               thumbColor: Pallete.whiteColor,
                               trackHeight: 4,
                               overlayShape: SliderComponentShape.noOverlay,
@@ -197,7 +210,6 @@ class MusicPlayer extends ConsumerWidget {
                         iconSize: 80,
                         color: Pallete.whiteColor,
                       ),
-
                       IconButton(
                         onPressed: songNotifier.seekNext,
                         icon: Image.asset(

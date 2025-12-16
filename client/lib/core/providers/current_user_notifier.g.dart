@@ -6,59 +6,22 @@ part of 'current_user_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, type=warning
-
-@ProviderFor(CurrentUserNotifier)
-const currentUserProvider = CurrentUserNotifierProvider._();
-
-final class CurrentUserNotifierProvider
-    extends $NotifierProvider<CurrentUserNotifier, UserModel?> {
-  const CurrentUserNotifierProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'currentUserProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$currentUserNotifierHash();
-
-  @$internal
-  @override
-  CurrentUserNotifier create() => CurrentUserNotifier();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UserModel? value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UserModel?>(value),
-    );
-  }
-}
-
 String _$currentUserNotifierHash() =>
     r'20f8611b9437db349cdf10372446e0fc486429e5';
 
-abstract class _$CurrentUserNotifier extends $Notifier<UserModel?> {
-  UserModel? build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<UserModel?, UserModel?>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<UserModel?, UserModel?>,
-              UserModel?,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
+/// See also [CurrentUserNotifier].
+@ProviderFor(CurrentUserNotifier)
+final currentUserNotifierProvider =
+    AutoDisposeNotifierProvider<CurrentUserNotifier, UserModel?>.internal(
+  CurrentUserNotifier.new,
+  name: r'currentUserNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$currentUserNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentUserNotifier = AutoDisposeNotifier<UserModel?>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
